@@ -10,7 +10,8 @@ class Todo {
 
   static async getAllTodos() {
     const todoDocuments = await db.getDb().collection("todos").find().toArray();
-    todoDocuments.map(function (todoDocument) {
+
+    return todoDocuments.map(function (todoDocument) {
       return new Todo(todoDocument.text, todoDocument._id);
     });
   }
@@ -21,7 +22,12 @@ class Todo {
       return db
         .getDb()
         .collection("todos")
-        .updateOne({ _id: todoId }, { $set: { text: this.text } });
+        .updateOne(
+          { _id: todoId },
+          {
+            $set: { text: this.text },
+          }
+        );
     } else {
       return db.getDb().collection("todos").insertOne({ text: this.text });
     }
@@ -29,9 +35,10 @@ class Todo {
 
   delete() {
     if (!this.id) {
-      throw new Error("Trying to delete todod without id");
+      throw new Error("Trying to delete todo without id!");
     }
     const todoId = new mongodb.ObjectId(this.id);
+
     return db.getDb().collection("todos").deleteOne({ _id: todoId });
   }
 }
