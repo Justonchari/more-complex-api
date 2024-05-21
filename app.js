@@ -2,9 +2,11 @@ const express = require("express");
 
 const db = require("./data/database");
 const todosRoute = require("./routes/todos.routes");
+const enableCorsMiddleware = require("./middlewares/cors");
 
 const app = express();
 
+app.use(enableCorsMiddleware);
 app.use(express.json());
 
 app.use("/todos", todosRoute);
